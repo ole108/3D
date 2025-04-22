@@ -3,9 +3,9 @@
 include <keyholder-base.scad>
 
 
-halfHolder();
+halfHolderTop();
 
-module halfHolder() {
+module halfHolderTop() {
   difference() {
     holder();
     translate([0,0,-height/2])
