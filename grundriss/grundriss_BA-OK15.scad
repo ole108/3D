@@ -5,52 +5,52 @@ $fs = 0.1;  // Don't generate smaller facets than 0.1 mm
 $fa = 5;    // Don't generate larger angles than 5 degrees
 
 // Masse der 5 bzw. 6 Schlafzimmer:
-r1L = 4000;
-r1B = 5000;
+r1L = 3900;
+r1B = 5600;
 
-r2L = 4000;
-r2B = 5000;
+r2L = 3600;
+r2B = 5700;
 
 r3L = 4000;
-r3B = 5000;
+r3B = 5200;
 
-r4L = 4000;
-r4B = 5000;
+r4L = 4960;
+r4B = 4100;
 r4_1L = 5000;
 r4_1B = 2000;
 r4_2L = 5000;
 r4_2B = 2000;
 
-r5L = 4000;
-r5B = 2000;
-f5L = 1500;
-f5B = 6000;
+r5L = 4340;
+r5B = 1950;
+f5L = 1300;
+f5B = 5130;
 
 
 // Masse der Funktionsräume:
-drL = 2000;
-drB = 2500;
+drL = 2170;
+drB = 2410;
 
-bad1L = 3000;
-bad1B = 2500;
-kloL = 1000;
-kloB = bad1B;
+bad1L = 2900;
+bad1B = 2200;
+kloL = 1170;
+kloB = 2800;
 
 thL = 5000;
 thB = 2000;
 
-bad2L = 3000;
-bad2B = 1500;
+bad2L = 2000;
+bad2B = 1300;
 
-wkL = 4000;
-wkLs = 1000;
-wkB = 5000;
-wkBs = 1000;
+wkL = 4300;
+wkLs = 900;
+wkB = 5300;
+wkBs = 850;
 
 
 // Sonstige Masse, Farben und Stärken:
 tuerL = 1000;
-fensterL = 1300;
+fensterL = 1100;
 
 cSchlafen = "lightBlue";
 cWohnen = "lightGreen";
@@ -81,16 +81,17 @@ translate([8000, -15000, 0]) line([1000, -1000], [0, -2000]);
 
 module grundriss() {
   translate([0, -r1B, 0]) raum1();
-  let (tl = r1L + 50, tb = -r2B) {
+  let (tl = r1L + 50, tb = -r2B - 400) {
     translate([tl, tb, 0]) raum2();
-    let (tl = tl + r2L + 50, tb = -r3B) {
+    let (tl = tl + r2L + 50, tb = -r3B - 800) {
       translate([tl, tb, 0]) raum3();
-      let (tl = tl, tb = tb - drB - 50) {
-        translate([tl + r3L - drL, tb, 0]) durchgangsRaum();
-        let (tl = tl, tb = tb - r4B - 50) {
+      let (tl = tl + r3L, tb = tb - drB - 50) {
+        translate([tl - drL, tb, 0]) durchgangsRaum();
+        let (tl = tl-r4L, tb = tb - r4B - 50) {
           translate([tl, tb, 0]) raum4();
 
-          line([tl - 3000, tb + 1000], [tl, tb + 1000]);
+          line([tl - 10500, tb], [tl, tb]);
+          line([0, tb], [0, tb+1500]);
         }
       }
     }
@@ -99,19 +100,21 @@ module grundriss() {
       translate([tl + kloL + 50, tb, 0]) bad1();
       let (tl = 0, tb = tb - thB - 50) {
         translate([tl, tb, 0]) treppenhaus();
+        let (tl = -5700, tb = tb - 1600) {
+          translate([0, tb-1500, 0]) turm();
+          line([tl+bad2L+2200, tb], [tl+bad2L+2200, tb-bad2B-100]);
+          line([tl+bad2L+2400, tb], [tl+bad2L+2400, tb-bad2B-100]);
+          line([tl+bad2L+2600, tb], [tl+bad2L+2600, tb-bad2B-100]);
+          let (tl = tl, tb = tb - bad2B - 50) {
+            translate([tl, tb, 0]) bad2();
 
-        line([bad2L+1200, tb], [bad2L+1200, tb - bad2B - 100]);
-        line([bad2L+1400, tb], [bad2L+1400, tb - bad2B - 100]);
-        line([bad2L+1600, tb], [bad2L+1600, tb - bad2B - 510]);
-        let (tl = 0, tb = tb - bad2B - 50) {
-          translate([tl, tb, 0]) bad2();
-
-          line([0, tb], [0, tb - 1100]);
-          let (tl = f5L + 50, tb = tb - wkB - 50) {
-            translate([tl, tb, 0]) wohnkueche();
-            let (tl = tl, tb = tb - r5B - 50) {
-              translate([0, tb, 0]) flur5();
-              translate([tl, tb, 0]) raum5();
+            line([tl, tb], [tl, tb - 2300]);
+            let (tl = tl + f5L + 50, tb = tb - wkB - 50) {
+              translate([tl, tb, 0]) wohnkueche();
+              let (tl = tl, tb = tb - r5B - 50) {
+                translate([tl - f5L - 50, tb, 0]) flur5();
+                translate([tl, tb, 0]) raum5();
+              }
             }
           }
         }
@@ -122,8 +125,8 @@ module grundriss() {
 
 module raum1() {
   rechteckigerRaum(
-    r1L, r1B, cSchlafen, "Name 1",
-    [[r1L/2, 0, false, false]],
+    r1L, r1B, cSchlafen, "Ole",
+    [[2280, 0, false, false]],
     [[1000, r1B, false], [3000, r1B, false]]
   );
 }
@@ -131,15 +134,15 @@ module raum1() {
 module raum2() {
   rechteckigerRaum(
     r2L, r2B, cSchlafen, "Name 2",
-    [[r2L/2, 0, false, true]],
+    [[1530, 0, false, true]],
     [[1000, r2B, false], [3000, r2B, false]]
   );
 }
 
 module raum3() {
   rechteckigerRaum(
-    r3L, r3B, cSchlafen, "Name 3",
-    [[3000, 0, false, false]],
+    r3L, r3B, cSchlafen, "Hartmut",
+    [[2700, 0, false, false]],
     [[1000, r3B, false], [3000, r3B, false]]
   );
 }
@@ -147,7 +150,7 @@ module raum3() {
 module durchgangsRaum() {
   rechteckigerRaum(
     drL, drB, cArbeiten, "Büro",
-    [[0, drB/2, true, false]],
+    [[0, 1430, true, false]],
     []
   );
 }
@@ -155,7 +158,7 @@ module durchgangsRaum() {
 module raum4() {
   rechteckigerRaum(
     r4L, r4B, cSchlafen, "Name 4",
-    [[3000, r4B, false, false], [0, 3000, true, false]],
+    [[3730, r4B, false, false], [0, 2070, true, false]],
     [[1000, 0, false], [3000, 0, false]]
   );
 }
@@ -171,7 +174,7 @@ module klo() {
 module bad1() {
   rechteckigerRaum(
     bad1L, bad1B, cBad, "Bad 1",
-    [[0, bad1B/2, true, true], [bad1L, bad1B/2, true, true]],
+    [[0, 1320, true, true], [bad1L, 1660, true, true]],
     []
   );
 }
@@ -180,6 +183,14 @@ module treppenhaus() {
   rechteckigerRaum(
     thL, thB, "lightGrey", "Treppenhaus",
     [[thL, thB/2, true, true]],
+    []
+  );
+}
+
+module turm() {
+  rechteckigerRaum(
+    1800, 1500, cArbeiten, "Turm",
+    [],
     []
   );
 }
@@ -201,10 +212,15 @@ module wohnkueche() {
   }
   line(punkte[m], punkte[0]);
 
+  translate([0, 1920, 0])
+    color("black") square([620, 770], false);
+
+  line([0, 1920], [wkL, 1920]);
+
   tuer(wkL/2, wkB, false, true);
 
-  fenster(wkL, 3500, true);
-  fenster(wkL, 1500, true);
+  fenster(wkL, wkB-1950, true);
+  fenster(wkL, 900, true);
 
   translate([wkL/2, wkB/2, 0]) color("black")
     text(
@@ -215,7 +231,7 @@ module wohnkueche() {
 
 module flur5() {
   rechteckigerRaum(
-    f5L, f5B, cSchlafen, "Name 5",
+    f5L, f5B, cSchlafen, "Xiaotong",
     [[f5L/2, f5B, false, true]],
     [[0, 2000, true], [0, 4500, true]]
   );
@@ -223,8 +239,8 @@ module flur5() {
 
 module raum5() {
   rechteckigerRaum(
-    r5L, r5B, cSchlafen, "Name 5",
-    [[0, r5B/2, true, true]],
+    r5L, r5B, cSchlafen, "Xiaotong",
+    [[0, 1350, true, true]],
     [[r5L, r5B/2, true]]
   );
 }
