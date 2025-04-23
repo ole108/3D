@@ -87,7 +87,7 @@ module pin() {
 module base() {
   difference() {
     baseFull();
-    translate([0,-wedgeL+2+holeDia/2,0])
+    translate([0,-wedgeL+3+holeDia/2,0])
       cylinder(h=height*2,d=holeDia,center=true);
   }
 }
