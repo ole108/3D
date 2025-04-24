@@ -14,12 +14,12 @@ r2B = 5700;
 r3L = 4000;
 r3B = 5200;
 
-r4L = 4960;
-r4B = 4100;
-r4_1L = 5000;
-r4_1B = 2000;
-r4_2L = 5000;
-r4_2B = 2000;
+// r4L = 4960;
+// r4B = 4100;
+r4_1L = 2430;
+r4_1B = 4100;
+r4_2L = 2430;
+r4_2B = 4100;
 
 r5L = 4340;
 r5B = 1950;
@@ -85,30 +85,36 @@ module grundriss() {
     translate([tl, tb, 0]) raum2();
     let (tl = tl + r2L + 50, tb = -r3B - 800) {
       translate([tl, tb, 0]) raum3();
+      color("red") line([0, 200], [tl + r3L, tb + r3B - 200]); // Aussenwand
       let (tl = tl + r3L, tb = tb - drB - 50) {
         translate([tl - drL, tb, 0]) durchgangsRaum();
-        let (tl = tl-r4L, tb = tb - r4B - 50) {
-          translate([tl, tb, 0]) raum4();
+        let (tl = tl-r4_1L, tb = tb - r4_1B - 50) {
+          translate([tl, tb, 0]) raum4_1();
+          let (tl = tl - r4_2L - 100, tb = tb) {
+            translate([tl, tb, 0]) raum4_2();
 
-          line([tl - 10500, tb], [tl, tb]);
-          line([0, tb], [0, tb+1500]);
+            line([tl - 10500, tb], [tl, tb]); // Raum4 - Bad2
+            line([0, tb], [0, tb+2200]); // Turm - Treppenhaus
+          }
         }
       }
     }
-    let (tl = 0, tb = tb - kloB - 50) {
+    let (tl = 0, tb = -r1B - kloB - 50) {
       translate([tl, tb, 0]) klo();
       translate([tl + kloL + 50, tb, 0]) bad1();
       let (tl = 0, tb = tb - thB - 50) {
         translate([tl, tb, 0]) treppenhaus();
-        let (tl = -5700, tb = tb - 1600) {
+        let (tl = -5700, tb = tb - 2080) {
           translate([0, tb-1500, 0]) turm();
+
+          // 3 Stufen:
           line([tl+bad2L+2200, tb], [tl+bad2L+2200, tb-bad2B-100]);
           line([tl+bad2L+2400, tb], [tl+bad2L+2400, tb-bad2B-100]);
           line([tl+bad2L+2600, tb], [tl+bad2L+2600, tb-bad2B-100]);
           let (tl = tl, tb = tb - bad2B - 50) {
             translate([tl, tb, 0]) bad2();
 
-            line([tl, tb], [tl, tb - 2300]);
+            line([tl, tb], [tl, tb - 2300]); // Bad2 - Flur5
             let (tl = tl + f5L + 50, tb = tb - wkB - 50) {
               translate([tl, tb, 0]) wohnkueche();
               let (tl = tl, tb = tb - r5B - 50) {
@@ -125,7 +131,7 @@ module grundriss() {
 
 module raum1() {
   rechteckigerRaum(
-    r1L, r1B, cSchlafen, "Ole",
+    r1L, r1B, cSchlafen, "Name 1",
     [[2280, 0, false, false]],
     [[1000, r1B, false], [3000, r1B, false]]
   );
@@ -133,9 +139,9 @@ module raum1() {
 
 module raum2() {
   rechteckigerRaum(
-    r2L, r2B, cSchlafen, "Name 2",
+    r2L, r2B, cSchlafen, "Xiaotong",
     [[1530, 0, false, true]],
-    [[1000, r2B, false], [3000, r2B, false]]
+    [[1000, r2B, false], [2800, r2B, false]]
   );
 }
 
@@ -155,11 +161,19 @@ module durchgangsRaum() {
   );
 }
 
-module raum4() {
+module raum4_1() {
   rechteckigerRaum(
-    r4L, r4B, cSchlafen, "Name 4",
-    [[3730, r4B, false, false], [0, 2070, true, false]],
-    [[1000, 0, false], [3000, 0, false]]
+    r4_1L, r4_1B, cSchlafen, "Name 4_1",
+    [[1630, r4_1B, false, false]],
+    [[1000, 0, false]]
+  );
+}
+
+module raum4_2() {
+  rechteckigerRaum(
+    r4_2L, r4_2B, cSchlafen, "Name 4_2",
+    [[0, 2070, true, false]],
+    [[1000, 0, false]]
   );
 }
 
@@ -198,7 +212,7 @@ module turm() {
 module bad2() {
   rechteckigerRaum(
     bad2L, bad2B, cBad, "Bad 2",
-    [[bad2L, bad2B/2, true, true]],
+    [[1200, 0, false, true]],
     []
   );
 }
@@ -231,15 +245,15 @@ module wohnkueche() {
 
 module flur5() {
   rechteckigerRaum(
-    f5L, f5B, cSchlafen, "Xiaotong",
-    [[f5L/2, f5B, false, true]],
-    [[0, 2000, true], [0, 4500, true]]
+    f5L, f5B, cSchlafen, "Ole",
+    [[550, f5B, false, false]],
+    [[0, 2000, true], [0, 5800, true]]
   );
 }
 
 module raum5() {
   rechteckigerRaum(
-    r5L, r5B, cSchlafen, "Xiaotong",
+    r5L, r5B, cSchlafen, "Ole",
     [[0, 1350, true, true]],
     [[r5L, r5B/2, true]]
   );
