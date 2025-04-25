@@ -64,7 +64,12 @@ boldPen = 120;
 // Überschrift / Straße, Grundriss und Richtungspfeil:
 //
 translate([50, 300, 0]) color("black")
-  text("Obere Königstraße 15", font = "Noto Sans", size = 500, halign = "left");
+  text(
+    "Obere Königstraße 15",
+    font = "Noto Sans",
+    size = 500,
+    halign = "left"
+  );
 
 grundriss();
 
@@ -104,7 +109,7 @@ module grundriss() {
       translate([tl + kloL + 50, tb, 0]) bad1();
       let (tl = 0, tb = tb - thB - 50) {
         translate([tl, tb, 0]) treppenhaus();
-        let (tl = -5700, tb = tb - 2080) {
+        let (tl = -5650, tb = tb - 2080) {
           translate([0, tb-1500, 0]) turm();
 
           // 3 Stufen:
@@ -276,8 +281,10 @@ module rechteckigerRaum(l, b, c, name, ts, fs) {
 
   color("black") square([l, pen], center = false);
   color("black") square([pen, b], center = false);
-  color("black") translate([0, b - pen,  0]) square([l, pen], center = false);
-  color("black") translate([l - pen, 0, 0]) square([pen, b], center = false);
+  color("black") translate([0, b - pen,  0])
+    square([l, pen], center = false);
+  color("black") translate([l - pen, 0, 0])
+    square([pen, b], center = false);
 
   for (t = ts) {
     tuer(t.x, t.y, t[2], t[3]);
@@ -299,36 +306,50 @@ module tuer(offL, offB, hoch, rechts) {
   } else {
     color("black") translate([offL, offB,  0])
       square([tuerL, boldPen], center = true);
-    color("black") translate([offL-tuerL/2, offB,  0]) rotate([0, 0, rechts?-45:45])
+    color("black") translate([offL-tuerL/2, offB,  0])
+      rotate([0, 0, rechts?-45:45])
       square([tuerL, pen], center = false);
   }
 }
 
 module fenster(offL, offB, hoch) {
     color("black") translate([offL, offB,  0])
-      square([hoch?boldPen:fensterL, hoch?fensterL:boldPen], center = true);  
+      square([
+        hoch?boldPen:fensterL,
+        hoch?fensterL:boldPen
+      ], center = true);  
 }
 
 module beschriftung(l, b, name) {
   if (l >= 4000) {
     translate([l/2, b/2, 0]) color("black")
       text(
-        str((l/1000) * (b/1000), " m\u00b2 ", name),
+        str(oneDecimal((l/1000) * (b/1000)), " m\u00b2 ", name),
         font = "Noto Sans", size = 250, halign = "center"
       );
   } else { 
     translate([l/2, b/2 + 200, 0]) color("black")
       text(
-        str((l/1000) * (b/1000), (l >= 1500) ? " m\u00b2": "m\u00b2"),
-        font = "Noto Sans", size = 250, halign = "center"
+        str(
+          oneDecimal((l/1000) * (b/1000)),
+          (l >= 1500) ? " m\u00b2": "m\u00b2"
+        ),
+        font = "Noto Sans",
+        size = 250,
+        halign = "center"
       );
     translate([l/2, b/2 - 200, 0]) color("black")
       text(
         name,
-        font = "Noto Sans", size = 250, halign = "center"
+        font = "Noto Sans",
+        size = 250,
+        halign = "center"
       );
   }
 }
+
+function oneDecimal(f) =
+  round(f * 10)/10;
 
 module line(p1, p2, thick = pen) {
   df = thick/2;
